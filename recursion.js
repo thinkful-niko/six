@@ -4,7 +4,7 @@ var MAX = 6; //Maximum levels queried
 
 var ARTISTS = new Array(3);  //Multidimensional array with the number of potential 'artists' i.e. compare Madonna, to Beethoven to Eminem to nth-artist
 
-var RELEVENT_ARTISTS = 5; //Number of relevent artists added to the list for each new artist 
+var RELEVENT_ARTISTS = 10; //Number of relevent artists added to the list for each new artist 
 
 
 $(function(){
@@ -28,7 +28,7 @@ var nextLevel = function(level){ //Recursion
 function addNew(level){
 	for(var i=0; i<ARTISTS.length; i++){
 		for(var j=0; j<RELEVENT_ARTISTS; j++){
-			var num = Math.floor(Math.random() * 50) + 1; 
+			var num = Math.floor(Math.random() * 100) + 1; 
 			if(typeof ARTISTS[i] != "object"){ //init the first array object - prob better way to do this 
 				 ARTISTS[i] = [num]	
 			} else {
