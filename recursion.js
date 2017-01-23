@@ -2,9 +2,9 @@
 
 var MAX = 3; //Maximum levels queried
 
-var ARTISTS = new Array(3);  //Multidimensional array with the number of potential 'artists' i.e. compare Madonna, to Beethoven to Eminem to nth-artist
+var ARTISTS = new Array(5);  //Multidimensional array with the number of potential 'artists' i.e. compare Madonna, to Beethoven to Eminem to nth-artist
 
-var RELEVENT_ARTISTS = 3; //Number of relevent artists added to the list for each new artist 
+var RELEVENT_ARTISTS = 4; //Number of relevent artists added to the list for each new artist 
 
 
 $(function(){
@@ -54,6 +54,8 @@ var getMatches = function(ARTISTS){
 	}, ['matches:']);
 
 	console.log(result)
+
 }
+
 
 
