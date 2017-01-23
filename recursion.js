@@ -4,7 +4,7 @@ var MAX = 6; //Maximum levels queried
 
 var ARTISTS = new Array(3);  //Multidimensional array with the number of potential 'artists' i.e. compare Madonna, to Beethoven to Eminem to nth-artist
 
-var RELEVENT_ARTISTS = 20; //Number of relevent artists added to the list for each new artist 
+var RELEVENT_ARTISTS = 10; //Number of relevent artists added to the list for each new artist 
 
 
 $(function(){
@@ -25,7 +25,7 @@ var nextLevel = function(level){ //Recursion
 
 
 
-function addNew(level){
+var addNew = function(level){
 	for(var i=0; i<ARTISTS.length; i++){
 		for(var j=0; j<RELEVENT_ARTISTS; j++){
 			var num = Math.floor(Math.random() * 100) + 1; 
@@ -43,7 +43,7 @@ function addNew(level){
 
 
 
-function getMatches(ARTISTS){  
+var getMatches = function(ARTISTS){  
 	var arrays = ARTISTS.slice(); //This is needed to clone the array and make a new reference 
 	var result = arrays.shift().reduce(function(res, v) {  //Fancy Pants Answer - http://stackoverflow.com/questions/11076067/finding-matches-between-multiple-javascript-arrays
 	    if (res.indexOf(v) === -1 && arrays.every(function(a) { //EXTRA CREDIT - Try to find if only some the artist arrays have matches, or which arrays match.  Say artist A with artist D match for value 'blah blah'; 
