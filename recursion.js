@@ -27,6 +27,8 @@ var nextLevel = function(level){ //Recursion
 
 var addNew = function(level){
 	for(var i=0; i<ARTISTS.length; i++){
+		console.log('search for '+$('input')[i].value)
+
 		for(var j=0; j<RELEVENT_ARTISTS; j++){
 			var num = Math.floor(Math.random() * 10) + 1; 
 			if(typeof ARTISTS[i] != "object"){ //init the first array object - prob better way to do this 
