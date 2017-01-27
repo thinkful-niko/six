@@ -11,7 +11,7 @@ $(function(){
 
 		MAX = 5; //Maximum levels queried
 
-		ARTISTS = new Array(3);  //Multidimensional array with the number of potential 'artists' i.e. compare Madonna, to Beethoven to Eminem to nth-artist --Must equal inputs
+		ARTISTS = new Array(2);  //Multidimensional array with the number of potential 'artists' i.e. compare Madonna, to Beethoven to Eminem to nth-artist --Must equal inputs
 		RELEVENT_ARTISTS = Math.min(20, 20); //Number of relevent artists added to the list for each new artist 
 
 		nextLevel(0) //Begin
