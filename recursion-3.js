@@ -1,5 +1,6 @@
 var DEGREES = 10; //Maximum levels queried; starts at zero
 var IDS = []; 
+var ARTISTS = []; 
 $(function(){
 	addNewArtist('alkaline trio', 0);
 })
@@ -27,6 +28,8 @@ function searchArtist(artist, degree) {
 			success: function (response) {
 				console.log(response);
 				IDS.push(response.artists.items[0].id);
+				ARTISTS.push(response.artists.items[0].name)
+				
 				searchRecommendations(response.artists.items[0].id, degree);
 
 				var firstHTML = '<h3>' + response.artists.items[0].name + '</h3>';
@@ -57,14 +60,21 @@ function searchRecommendations(artist, degree) {
 							var secondHTML = '<h5 style="color:'+color+';font-size:'+fontSize+'">' + this.name + '</h5>';
 							$('.first-degree').append(secondHTML);
 							IDS.push(this.id)
+							ARTISTS.push(this) //You can add unique identifiers here, depending on degree #.
 							searchRecommendations(this.id, degree+1)
 						}
 					})
+					
+
+				      console.log('ARTISTS');
+				      console.log(ARTISTS);
+
 				}		
 			});	
 
 		},300,degree)
 	}
 }
+
 
 
