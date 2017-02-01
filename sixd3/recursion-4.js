@@ -1,7 +1,7 @@
 var MAX = 2; //Maximum levels queried
 var ARTISTS = [];  //Multidimensional array with the number of potential 'artists' i.e. compare Madonna, to Beethoven to Eminem to nth-artist
 var RELEVENT_ARTISTS = 2; //Number of relevent artists added to the list for each new artist 
-var promises = []; 
+
 
 $(function(){
 	//nextLevel(0) //Begin
@@ -9,13 +9,11 @@ $(function(){
 	//addNewArtist('alkaline trio', 0);
 	
 })
-/*
-
 function init(i){
-	//for(var i; i<1; i++){
+	for(var i; i<=ARTISTS.length; i++){
 
-		console.log('searchArtists for relevant artist '+$('input')[1].value)	
-		var artist = $('input')[1].value;
+		console.log('searchArtists for relevant artist '+$('input')[i].value)	
+		var artist = $('input')[i].value;
 		$.ajax({
 			url: 'https://api.spotify.com/v1/search',
 			data: {
@@ -30,7 +28,7 @@ function init(i){
 		});
 
 
-	//}
+	}
 	//console.log(ARTISTS)	
 	//getMatches(ARTISTS)	
 }
@@ -41,38 +39,36 @@ function searchRecommendations(artist, depth) {
 			console.log(' ')				
 			console.log('searchRecommendations '+artist+ ' '+ depth )	
 			if(depth == MAX){ return console.log('max reached '+depth) } else {
-					promises.push(
-						$.ajax({
-							url: 'https://api.spotify.com/v1/artists/' + artist + '/related-artists',
-							data: {
-								type: 'artist',
-							},
-							success: function (response) {
+
+				return setTimeout(function() {
+
+					$.ajax({
+						url: 'https://api.spotify.com/v1/artists/' + artist + '/related-artists',
+						data: {
+							type: 'artist',
+						},
+						success: function (response) {
+							
+							console.log('RESPONSE');
+							console.log(response)
+							for(var r=0; r<RELEVENT_ARTISTS; r++){
+								console.log(response.artists[r].name)
+								var obj = { 'artist' : response.artists[r].name,  'level':(depth+1)*5 } 
 								
-								console.log('RESPONSE');
-								console.log(response)
-								for(var r=0; r<RELEVENT_ARTISTS; r++){
-									console.log(response.artists[r].name)
-									var obj = { 'artist' : response.artists[r].name,  'level':(depth+1)*5 } 
-									
-									ARTISTS.push(obj)
-									
-									searchRecommendations(response.artists[r].id, depth+1)  //Recursion
-								}
-							}		
-						})
-					)
+								ARTISTS.push(obj)
+								
+								searchRecommendations(response.artists[r].id, depth+1)  //Recursion
+							}
+						}		
+					});
+				},0)
 			}	
 }
 
 
 
 
-$.when.apply(undefined, promises).done(function() {
-	convert_artists_to_nodes_and_links(ARTISTS)
-	console.log( 'this is being called too soon')
-	console.log( promises )
-})
+
 
 
 
@@ -86,73 +82,13 @@ $(document).ajaxStop(function () { //$.when is most likely better
       //convert_artists_to_nodes_and_links(ARTISTS)
 }); 
 
-*/
-
-
-function init(i) {
-    // $('input.artist') - as I can't see your HTML, I would recommend adding cclass='artist' to inputs that you want to process
-    // [].map.call($('input.artist'), function(artist, i) { - iterate through the inputs, calling the function which returns a promise
-    // artistP will be an array of Promises
-    var artistsP = [].map.call($('input.artist'), function(artist, i) {
-        console.log('searchArtists for relevant artist ' + $('input')[i].value)
-        var artist = $('input')[i].value;
-        // return the promise returned by $.ajax
-        return $.ajax({
-            url: 'https://api.spotify.com/v1/search',
-            data: {
-                q: artist,
-                type: 'artist'
-            }
-        })
-        // the returned promise needs to wait for the promise returned by searchRecommendations
-        .then(function(response) {
-            console.log(response.artists.href);
-            return searchRecommendations(response.artists.items[0].id, 0);
-        });
-    });
-    // wait for the promises to complete and we're done
-    $.when.apply($, artistsP).done(function() {
-        convert_artists_to_nodes_and_links(ARTISTS)
-	console.log('THANK YOU')
-    });
-}
-
-function searchRecommendations(artist, depth) {
-    console.log('searchRecommendations ' + artist + ' ' + depth)
-    if (depth == MAX) {
-        // just return undefined to stop the recursion
-        return console.log('max reached ' + depth);
-    } else {
-        // return a promise
-        return $.ajax({
-            url: 'https://api.spotify.com/v1/artists/' + artist + '/related-artists',
-            data: {
-                type: 'artist',
-            }
-        })
-        // the promise needs to wait for the recursed artists
-        .then(function(response) {
-            // create an array of promises to wait on
-            var promises = response.artists.map(function(artist, r) {
-                console.log(artist.name)
-                var obj = {
-                    'artist': artist.name,
-                    'level': (depth + 1) * 5
-                }
-                ARTISTS.push(obj)
-                return searchRecommendations(response.artists[r].id, depth + 1) //Recursion
-            });
-            // return a promise that waits for all the "sub" requests
-            return $.when.apply($, promises);
-        });
-    }
-}
 
 
 $('#show').click(function(e){
 	e.preventDefault()
 	init(0);
 	
+	convert_artists_to_nodes_and_links(ARTISTS)
 	
 })
 
