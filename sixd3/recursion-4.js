@@ -53,7 +53,6 @@ function searchRecommendations(artist, depth) {
 							console.log(response)
 							for(var r=0; r<RELEVENT_ARTISTS; r++){
 								console.log(response.artists[r].name)
-								//var obj = { 'id' : response.artists[r].name,'level':depth+1,'group':Math.floor(Math.random() * 10) + 1 } 
 								var obj = { 'artist' : response.artists[r].name,  'level':(depth+1)*5} 
 
 								ARTISTS.push(obj)
@@ -63,26 +62,12 @@ function searchRecommendations(artist, depth) {
 							}
 						}		
 					});
-				},500,depth)
+				},0)
 			}	
 }
 
 
 
-
-
-
-						/*if(typeof ARTISTS[artist_order] != "object"){ //init the first array object - prob better way to do this 
-										 //ARTISTS[artist_order] = [num]	
-										var obj = { 'artist' : response.artists[r].name,  'level':depth+1} 
-										 ARTISTS[artist_order] = [obj]
-									} else {
-										//ARTISTS[artist_order].push(num)
-										var obj = { 'artist' : response.artists[r].name,  'level':depth+1} 
-
-										ARTISTS[artist_order].push(obj)
-											
-								}*/
 
 
 
@@ -103,11 +88,6 @@ $(document).ajaxStop(function () { //$.when is most likely better
 $('#show').click(function(e){
 	e.preventDefault()
 	convert_artists_to_nodes_and_links(ARTISTS)
-	
-})
-$('#compare').click(function(e){
-	e.preventDefault()
-	getMatches(ARTISTS)
 	
 })
 
@@ -295,6 +275,20 @@ function getMatches(ARTISTS){
 
 
 
+
+
+
+						/*if(typeof ARTISTS[artist_order] != "object"){ //init the first array object - prob better way to do this 
+										 //ARTISTS[artist_order] = [num]	
+										var obj = { 'artist' : response.artists[r].name,  'level':depth+1} 
+										 ARTISTS[artist_order] = [obj]
+									} else {
+										//ARTISTS[artist_order].push(num)
+										var obj = { 'artist' : response.artists[r].name,  'level':depth+1} 
+
+										ARTISTS[artist_order].push(obj)
+											
+								}*/
 
 
 
