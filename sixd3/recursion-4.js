@@ -100,6 +100,16 @@ $(document).ajaxStop(function () { //$.when is most likely better
 
 
 
+$('#show').click(function(e){
+	e.preventDefault()
+	convert_artists_to_nodes_and_links(ARTISTS)
+	
+})
+$('#compare').click(function(e){
+	e.preventDefault()
+	getMatches(ARTISTS)
+	
+})
 
 
 function convert_artists_to_nodes_and_links(ARTISTS){
@@ -122,14 +132,14 @@ function convert_artists_to_nodes_and_links(ARTISTS){
 
 	console.log(obj)
 
-	   fireAway(obj)
+	createD3(obj)
 }
 
 
 
 
 
-function fireAway(object){
+function createD3(object){
 	var svg = d3.select("svg"),
 	    width = +svg.attr("width"),
 	    height = +svg.attr("height");
@@ -141,93 +151,89 @@ function fireAway(object){
 		.force("charge", d3.forceManyBody())
 		.force("center", d3.forceCenter(width / 2, height / 2));
 
-		d3.json("miserables.json", function(error, graph) {
-				if (error) throw error;
-				console.log(graph)
-				console.log('object')
-				console.log(object)
-				graph = object;
+	console.log('object')
+	console.log(object)
+	var graph = object;
 
-				var link = svg.append("g")
-				.attr("class", "links")
-				.selectAll("line")
-				.data(graph.links)
-				.enter().append("line")
-				.attr("stroke-width", function(d) { return Math.sqrt(d.value); });
+	var link = svg.append("g")
+		.attr("class", "links")
+		.selectAll("line")
+		.data(graph.links)
+		.enter().append("line")
+		.attr("stroke-width", function(d) { return Math.sqrt(d.value); });
 
 
-			var node = svg.append("g")
-			.attr("class", "nodes")
-			.selectAll("circle")
-			.data(graph.nodes)
-			.enter().append("circle")
-			.attr("r", function(d){
-				return d.radius;
-				})
-			.attr("fill", function(d) { return color(d.id); })
-			.call(d3.drag()
-				.on("start", dragstarted)
-				.on("drag", dragged)
-				.on("end", dragended));
+	var node = svg.append("g")
+		.attr("class", "nodes")
+		.selectAll("circle")
+		.data(graph.nodes)
+		.enter().append("circle")
+		.attr("r", function(d){
+			return d.radius;
+			})
+		.attr("fill", function(d) { return color(d.id); })
+		.call(d3.drag()
+			.on("start", dragstarted)
+			.on("drag", dragged)
+			.on("end", dragended));
 
-			node.append("svg:title")
-				.attr("dx", 12)
-				.attr("dy", ".35em")
-				.text(function(d) { return d.id });
+	node.append("svg:title")
+		.attr("dx", 12)
+		.attr("dy", ".35em")
+		.text(function(d) { return d.id });
 
-			var labels = svg.append("g")
-				.attr("class", "label")
-				.selectAll("text")
-				.data(graph.nodes)
-				.enter().append("text")
-				.attr("class", "labels")
-				
-				.attr("dx", 6)
-				.attr("dy", ".35em")
-				.text(function(d) { return d.id });
+	var labels = svg.append("g")
+		.attr("class", "label")
+		.selectAll("text")
+		.data(graph.nodes)
+		.enter().append("text")
+		.attr("class", "labels")
+		
+		.attr("dx", 6)
+		.attr("dy", ".35em")
+		.text(function(d) { return d.id });
 
 
 
-			simulation
-				.nodes(graph.nodes)
-				.on("tick", ticked);
+	simulation
+		.nodes(graph.nodes)
+		.on("tick", ticked);
 
-			simulation.force("link")
-				.links(graph.links);
+	simulation.force("link")
+		.links(graph.links);
 
-			function ticked() {
-				link
-					.attr("x1", function(d) { return d.source.x; })
-					.attr("y1", function(d) { return d.source.y; })
-					.attr("x2", function(d) { return d.target.x; })
-					.attr("y2", function(d) { return d.target.y; });
+	function ticked() {
+		link
+			.attr("x1", function(d) { return d.source.x; })
+			.attr("y1", function(d) { return d.source.y; })
+			.attr("x2", function(d) { return d.target.x; })
+			.attr("y2", function(d) { return d.target.y; });
 
-				node
-					.attr("cx", function(d) { return d.x; })
-					.attr("cy", function(d) { return d.y; });
+		node
+			.attr("cx", function(d) { return d.x; })
+			.attr("cy", function(d) { return d.y; });
 
-				labels
-					.attr("x", function(d) { return d.x; })
-					.attr("y", function(d) { return d.y; });  		
-			}
-	});
+		labels
+			.attr("x", function(d) { return d.x; })
+			.attr("y", function(d) { return d.y; });  		
+	}
 
-function dragstarted(d) {
-	if (!d3.event.active) simulation.alphaTarget(0.3).restart();
-	d.fx = d.x;
-	d.fy = d.y;
-}
+	function dragstarted(d) {
+		if (!d3.event.active) simulation.alphaTarget(0.3).restart();
+		d.fx = d.x;
+		d.fy = d.y;
+	}
 
-function dragged(d) {
-	d.fx = d3.event.x;
-	d.fy = d3.event.y;
-}
+	function dragged(d) {
+		d.fx = d3.event.x;
+		d.fy = d3.event.y;
+	}
 
-function dragended(d) {
-	if (!d3.event.active) simulation.alphaTarget(0);
-	d.fx = null;
-	d.fy = null;
-}
+	function dragended(d) {
+		if (!d3.event.active) simulation.alphaTarget(0);
+		d.fx = null;
+		d.fy = null;
+	}
 }
 
 
@@ -240,6 +246,19 @@ function dragended(d) {
 
 
 
+
+function getMatches(ARTISTS){  
+	var arrays = ARTISTS.slice(); //This is needed to clone the array and make a new reference 
+	var result = arrays.shift().reduce(function(res, v) {  //Fancy Pants Answer - http://stackoverflow.com/questions/11076067/finding-matches-between-multiple-javascript-arrays
+	    if (res.indexOf(v) === -1 && arrays.every(function(a) { //EXTRA CREDIT - Try to find if only some the artist arrays have matches, or which arrays match.  Say artist A with artist D match for value 'blah blah'; 
+		return a.indexOf(v) !== -1;
+	    })) 
+	    res.push(v);
+	    return res;
+	}, ['matches:']);
+
+	console.log(result)
+}
 
 
 
@@ -365,19 +384,6 @@ function searchRecommendations(artist, degree) {
 
 
 
-
-function getMatches(ARTISTS){  
-	var arrays = ARTISTS.slice(); //This is needed to clone the array and make a new reference 
-	var result = arrays.shift().reduce(function(res, v) {  //Fancy Pants Answer - http://stackoverflow.com/questions/11076067/finding-matches-between-multiple-javascript-arrays
-	    if (res.indexOf(v) === -1 && arrays.every(function(a) { //EXTRA CREDIT - Try to find if only some the artist arrays have matches, or which arrays match.  Say artist A with artist D match for value 'blah blah'; 
-		return a.indexOf(v) !== -1;
-	    })) 
-	    res.push(v);
-	    return res;
-	}, ['matches:']);
-
-	console.log(result)
-}
 
 
 
