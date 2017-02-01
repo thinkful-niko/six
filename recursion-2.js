@@ -1,6 +1,7 @@
 
 
 var MAX, ARTISTS, RELEVENT_ARTISTS; 
+var table = document.getElementById("myTable");
 
 
 $(function(){
@@ -9,7 +10,7 @@ $(function(){
 		
 		e.preventDefault();
 
-		MAX = 5; //Maximum levels queried
+		MAX = 2; //Maximum levels queried
 
 		ARTISTS = new Array(2);  //Multidimensional array with the number of potential 'artists' i.e. compare Madonna, to Beethoven to Eminem to nth-artist --Must equal inputs
 		RELEVENT_ARTISTS = Math.min(20, 20); //Number of relevent artists added to the list for each new artist 
@@ -59,7 +60,10 @@ function searchArtists(artist, artists_order, element) {
 				var relevent_artist = response.artists.items[j]; 
 
 				if(relevent_artist){
-					console.log('searchRecommendations for relevant artist '+relevent_artist.name)
+					//console.log(relevent_artist.name)
+					//var row = table.insertRow(0);
+					//row.innerHTML = relevent_artist.name
+					//$('table').append('<div id="'+ relevent_artist.name+'" class="artist">'+relevent_artist.name+'</div>')
 					searchRecommendations(relevent_artist, artists_order);
 					
 				}
@@ -81,9 +85,14 @@ function searchRecommendations(relevent_artist, artist_order, element) {
 				
 					
 				for(var a=0; a<response.artists.length; a++){
-					//console.log(response.artists[a].name)
+					//console.log('     -     ' +response.artists[a].name)
 					var num = response.artists[a].name;
-				
+					//row.insertCell(artist_order);
+					//row.innerHTML = relevent_artist[a].name
+					//$('#'+relevent_artist.name).append('<div id="'+ num+ '" class="rec_artist">'+num+'</div>')
+
+
+
 					if(typeof ARTISTS[artist_order] != "object"){ //init the first array object - prob better way to do this 
 							 ARTISTS[artist_order] = [num]	
 						} else {
